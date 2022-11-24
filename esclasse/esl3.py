@@ -14,4 +14,4 @@ def sum_csv(my_file):
     return somma
 
 
-print(sum_csv("shampoo_sales.csv"))
+
