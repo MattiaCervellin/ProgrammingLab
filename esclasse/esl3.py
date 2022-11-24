@@ -1,20 +1,15 @@
 def sum_csv(my_file):
-
     values = []
-    somma = 0
-
-    file = open(my_file, 'r')
-    for line in file:
+    fun = open(my_file, 'r')
+    for line in fun:
         elements = line.split(',')
-
-        if elements[0] != 'Date' :
-
+        if elements[0] != 'Date':
+            #date = elements[0]
             value = elements[1]
-
-            values.append(value)
-
-    for value in values:
-        somma = somma + value
+            values.append(float(value))
+    if len(values) == 0:
+        return None
+    somma = sum(values)
 
     return somma
 
