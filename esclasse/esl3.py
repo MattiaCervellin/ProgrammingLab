@@ -3,8 +3,8 @@ def sum_csv(my_file):
     values = []
     somma = 0
 
-    file = open('my_file', 'r')
-    for line in my_file:
+    file = open(my_file, 'r')
+    for line in file:
         elements = line.split(',')
 
         if elements[0] != 'Date' :
@@ -17,3 +17,6 @@ def sum_csv(my_file):
         somma = somma + value
 
     return somma
+
+
+print(sum_csv("shampoo_sales.csv"))
