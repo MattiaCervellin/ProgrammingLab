@@ -1,2 +1,4 @@
-class CSVFile():
+class NumericalCSVFile():
+
+    
     
