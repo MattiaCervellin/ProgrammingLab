@@ -6,7 +6,10 @@ class CSVFile():
 
     def get_data(self):
         data=[]
-        file=open(self.name, 'r')
+        try: 
+            file=open(self.name, 'r')
+        except:
+            print('Errore: questo file non esiste')
         for line in file:
             if line == 'Date,Sales\n':
                 elements = None
@@ -17,10 +20,5 @@ class CSVFile():
         file.close()
         return data
 
-file=CSVFile('shampoo_sales.csv')
-print(file.get_data())
-
-        
-        
-
-
+    
+    
