@@ -91,7 +91,25 @@ time_series = time_series_file.get_data()
 
 def detect_similar_monthly_variations(time_series, years):
 
+        #analizzo casi in cui il programma non potrebbe procedere
+    
+    if time_series==[]:            
+        raise ExamException('Errore: time_series è vuoto')
 
+    if years is not list:
+        raise ExamException('Errore: years non è una lista')
+
+    if years==[] or len(years)!=2:
+        raise ExamException('Errore: years non adatto')
+
+    try:
+        int(years[0])
+        int(years[1])
+    except:
+        raise ExamException('Errore: gli anni non sono interi')        
+
+
+    
     var1=False   #questa variabile mi dirà se years si trova nella time_series
 
     lista1=[]
@@ -107,14 +125,13 @@ def detect_similar_monthly_variations(time_series, years):
         
         
 
-    var2=False    
+    var2=False    #stessa cosa ma per il secondo anno
 
     lista2=[]
     for element in time_series:
         data = element[0].split('-')
         if data[0]==years[1]:
             var2=True
-            #creo lista con valori in un anno, tenendo conto solo dei mesi a disposizione
             lista2.insert(data[1]-1, int(element[1]))
     if var2==False:
         raise ExamException('Errore: anno non trovato')
@@ -125,7 +142,7 @@ def detect_similar_monthly_variations(time_series, years):
     
     
     
-    diff1=[]                       #creo le due liste differenza e ci metto dentro none oppure la                                         differenza tra 2 mesi
+    diff1=[]                       #creo le due liste differenza e ci metto dentro None oppure la                                         differenza tra 2 mesi
     for i in lista1:
         
         if i == lista1[0]:
@@ -154,14 +171,7 @@ def detect_similar_monthly_variations(time_series, years):
                 diff2.append(diff)
 
 
-
-
-
-
-
-
-
-
+    
     variazioni = []                                    #creo la lista finale
     for i in enumerate(10):
         if diff1[i]==None or diff2[i]==None:           #se una diff vale None, non c'è il mese,                                                               quindi deve appare come False
