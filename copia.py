@@ -265,5 +265,3 @@ def compute_avg_monthly_difference(time_series, first_year, last_year):
 
 aa=compute_avg_monthly_difference(time_series, "1949", "1951")
 print(aa)
-
-
