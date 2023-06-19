@@ -9,7 +9,7 @@ class CSVTimeSeriesFile():
             
     def get_data(self):
         
-        #controllo nome
+        #controllo il nome
         if self.name is None:
             raise ExamException('Errore: nome file non inserito in input!')
 
@@ -21,7 +21,7 @@ class CSVTimeSeriesFile():
         except Exception:
             raise ExamException('Errore: non è stato possibile aprire o leggere il file!')
 
-        #lista vuota per salvare i dati alla fine
+        
         lista=[]
         
         #riapro il file
@@ -31,28 +31,26 @@ class CSVTimeSeriesFile():
         for line in my_file:
 
             
-            #pulizia carattere dall'ultimo elemento e split sulla virgola
+            #tolgo \n ed eseguo split sulla virgola
             elements=line.strip("\n").split(",")
             
             
 
             #salto la prima riga
-            if elements[0].strip() == 'date':
+            if elements[0].strip()=='date':
                 continue
 
-            #variabile ausiliara per fare un check su anni e mesi
+            #ricavo la variabile tempo
             tempo=elements[0].split('-') 
             
-
-            
-
+            #provo a convertire gli anni e i mesi in interi
             try:
-                tempo[0] = int(tempo[0])
-                tempo[1] = int(tempo[1])
+                tempo[0]=int(tempo[0])
+                tempo[1]=int(tempo[1])
             except Exception:
                 continue
 
-            
+            #stessa cosa per i passengeri
             try:
                 passengers=int(elements[1])
             except Exception:
@@ -61,60 +59,67 @@ class CSVTimeSeriesFile():
             if passengers<=0:
                 continue
                             
-            #aggiungo alla lista gli elementi di questa linea con la data sotto forma di stringa e il numero di passeggeri
+            #se sono arrivato qua vuol dire che l'elemento va bene altrimenti l'ho saltato
             
             lista.append(elements)
 
-        #se arrivo al comando append vuol dire che la riga del file va bene. atrimenti viene saltata senza alzare eccezioni
+        
         
         #chiudo il file
         my_file.close()
 
-        #controllo la validità dei dati(ordine e duplicazioni varie)
+        
         numerical_data=[]
+        #eseguo diversi check sugli elementi della lista
         for item in lista:
-            if item == []:
+            #se è vuoto
+            if item==[]:
                 continue
-            if len(item) < 2:
-                continue  #la lista deve avere almeno due valori (data e numero passeggeri)
+            #se ha lunghezza <2
+            if len(item)<2:
+                continue  
 
-            #controllo che i valori siano interi
-            tempo = item[0].split('-')  #separo anno e mese
+            #se sono interi
+            tempo=item[0].split('-') 
             try:
-                anno = int(tempo[0])  #anno è un intero
-                mese = int(tempo[1])  #mese è un intero
-                passeggero = int(item[1])  #passeggero è un intero
+                anno=int(tempo[0])  
+                mese=int(tempo[1])  
+                passeggero=int(item[1])  
             except Exception:
                 continue
 
-            #controllo che i dati siano ordinati per aggungerli a numerical_data
-            if item == lista[0]:
-                prev_anno = anno
-                prev_mese = mese
+            #se sono ordinati
+            
+            
+            if item==lista[0]:
+                prev_anno=anno
+                prev_mese=mese
             else:
-                if anno < prev_anno:
-                    raise ExamException('errore, anni non ordinati')
+                
+                if anno<prev_anno:
+                    raise ExamException('Errore: anni non ordinati')
                     continue
-                if mese <= prev_mese and anno == prev_anno:
-                    raise ExamException('errore, mesi non ordinati o duplicati')
+                if mese<=prev_mese and anno==prev_anno:
+                    raise ExamException('Errore: mesi non ordinati o duplicati')
                     continue
-                prev_anno = anno
-                prev_mese = mese
-            if anno > 0 and mese > 0 and mese <= 12 and passeggero >= 0:
+                prev_anno=anno
+                prev_mese=mese
+            if anno>0 and mese>0 and mese<=12 and passeggero>=0:
                 numerical_data.append(item)
 
         return numerical_data
         
-#time_series_file = CSVTimeSeriesFile(name='data.csv')
-#time_series = time_series_file.get_data()
+#time_series_file=CSVTimeSeriesFile(name='data.csv')
+#time_series=time_series_file.get_data()
 #print(time_series)
 
-#################################################################################
+
 
 #FUNZIONE PER IL CALCOLO DELLA FIFFERENZA MENSILE MEDIA
 
 def compute_avg_monthly_difference(time_series, first_year, last_year):
 
+    #verifico che la lista non sia vuota
     if not time_series:
         raise ExamException('Errore: time_series è vuota')
     
@@ -162,7 +167,7 @@ def compute_avg_monthly_difference(time_series, first_year, last_year):
     
     
     
-    #CREO LISTA DI LISTE, UNA PER ANNO, CON ALL'INTERNO TUTTI I DATI DELL'ANNO
+    #lista di liste
     
     tot_anni=[]
 
@@ -177,7 +182,7 @@ def compute_avg_monthly_difference(time_series, first_year, last_year):
 
     #Converto anno e mese in numeri interi
     for element in time_series:
-        time = element[0].split('-')
+        time=element[0].split('-')
         try:
             anno=int(time[0])
             mese=int(time[1])-1
@@ -186,7 +191,7 @@ def compute_avg_monthly_difference(time_series, first_year, last_year):
             continue
 
         #considero solo l'intervallo di anni che ci interessa
-        if anno < anno1 or anno > anno2:
+        if anno<anno1 or anno>anno2:
             continue
         
         
@@ -207,7 +212,7 @@ def compute_avg_monthly_difference(time_series, first_year, last_year):
 
 
     
-    #CALCOLO DELLE MEDIE
+    #calcolo le medie
     
     medie=[]
     
@@ -221,7 +226,8 @@ def compute_avg_monthly_difference(time_series, first_year, last_year):
         som=0
         
         while c>0:
-            #seleziono l'elemento in posizione 'i' della sotto-lista numero 'counter' o 'counter-1' presente nella lista 'tot_anni'
+            #seleziono l'elemento in posizione 'i' della sotto-lista 'c' e 'c-1'
+            #in pratica lo stesso mese di due anni diversi
             try:
                 primo=int(tot_anni[c][i])
                 secondo=int(tot_anni[c-1][i])
@@ -247,6 +253,8 @@ def compute_avg_monthly_difference(time_series, first_year, last_year):
             diff=primo-secondo
             som=som+diff
             c=c-1
+
+        #in caso di eccezioni il divisore decresce
                 
         #se uno degli anni non è stato reso intero o è 0    
         if num_anni>2 and d<2:
@@ -259,7 +267,7 @@ def compute_avg_monthly_difference(time_series, first_year, last_year):
     return medie
 
     
-#aa=compute_avg_monthly_difference(time_series, "1949", "1951")
-#print(aa)
+#a=compute_avg_monthly_difference(time_series, "1949", "1951")
+#print(a)
 
 
