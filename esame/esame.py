@@ -3,7 +3,7 @@ class ExamException(Exception):
 
 class CSVFile():
 
-    def _init_(self,name):
+    def __init__(self,name):
         self.name=name #inizializzo nome file
         
     
@@ -84,10 +84,10 @@ class CSVTimeSeriesFile(CSVFile):
 
             return numerical_data    #ho creato una lista con solo dati che posso utilizzare
         
-
-
 time_series_file = CSVTimeSeriesFile(name='data.csv')
+
 time_series = time_series_file.get_data()
+
 
 def detect_similar_monthly_variations(time_series, years):
 
@@ -96,7 +96,7 @@ def detect_similar_monthly_variations(time_series, years):
     if time_series==[]:            
         raise ExamException('Errore: time_series è vuoto')
 
-    if years is not list:
+    if not isinstance(years, list):
         raise ExamException('Errore: years non è una lista')
 
     if years==[] or len(years)!=2:
@@ -174,7 +174,7 @@ def detect_similar_monthly_variations(time_series, years):
     
     variazioni = []                                    #creo la lista finale
     for i in enumerate(10):
-        if diff1[i]==None or diff2[i]==None:           #se una diff vale None, non c'è il mese,                                                               quindi deve appare come False
+        if diff1[i]==None or diff2[i]==None:           #se una diff vale None, non c'è il mese,                                                               quindi appare come False
             diff=1
         else:
             diff = diff1[i] - diff2[i]
@@ -183,6 +183,12 @@ def detect_similar_monthly_variations(time_series, years):
         else:
             variazioni.append(False)
     return variazioni 
+
+
+
+
+
+print(detect_similar_monthly_variations(time_series, [1949, 1950]))
     
             
 
